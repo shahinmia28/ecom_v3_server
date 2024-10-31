@@ -1,5 +1,26 @@
 import mongoose, { Schema, model } from 'mongoose';
 
+const reviewSchema = new Schema(
+  {
+    user: {
+      type: {},
+      required: true,
+    },
+    rating: {
+      type: Number,
+      required: true,
+      min: 1,
+      max: 5,
+    },
+    comment: {
+      type: String,
+      required: true,
+      maxlength: 500,
+    },
+  },
+  { timestamps: true }
+);
+
 const productSchema = new Schema(
   {
     name: {
@@ -27,20 +48,22 @@ const productSchema = new Schema(
     discount: {
       type: Number,
       required: true,
+      min: 0,
     },
     category: {
-      type: mongoose.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: 'Category',
       required: true,
     },
     company: {
-      type: mongoose.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: 'Company',
       required: true,
     },
     quantity: {
       type: Number,
       required: true,
+      min: 0,
     },
     fetcher: {
       type: Boolean,
@@ -50,23 +73,15 @@ const productSchema = new Schema(
       type: Array,
       required: true,
     },
-
     color: {
       type: String,
       required: true,
     },
-    reviews: [
-      {
-        user: String,
-        user_image: String,
-        rating: Number,
-        comment: String,
-      },
-    ],
+    reviews: [reviewSchema],
   },
   { timestamps: true }
 );
 
-const Product = model('Products', productSchema);
+const Product = model('Product', productSchema);
 
 export default Product;

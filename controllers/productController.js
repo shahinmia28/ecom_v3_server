@@ -109,29 +109,65 @@ export const createProduct = async (req, res, next) => {
 };
 
 // review at controller
-export const pushReview = async (req, res, next) => {
+
+export const pushReview = async (req, res) => {
   try {
-    const { user, user_email, rating, comment } = req.body;
+    const { user_id, rating, comment } = req.body;
+
+    // Check for missing data
+    if (!user_id || !rating || !comment) {
+      return res.status(400).send({
+        success: false,
+        message: 'Please provide user_id, rating, and comment.',
+      });
+    }
+
+    // Validate rating
+    if (rating < 1 || rating > 5) {
+      return res.status(400).send({
+        success: false,
+        message: 'Rating must be between 1 and 5.',
+      });
+    }
+
+    // Find user
+    const user = await User.findById(user_id);
+
+    // Find the product by ID
     const product = await Product.findById(req.params.id);
+    if (!product) {
+      return res.status(404).send({
+        success: false,
+        message: 'Product not found.',
+      });
+    }
 
-    const findUser = await User.findOne({ email: user_email });
-    // console.log(findUser);
-
+    // Push the review to the product's reviews array
     product.reviews.push({
       user,
       rating,
       comment,
     });
+
+    // Save the updated product document
     await product.save();
+
+    // Respond with success message
     res.status(201).send({
       success: true,
-      message: 'Thanks for your comment and rating.',
+      message: 'Thanks for your comments and Ratting',
       product,
     });
   } catch (error) {
-    console.log(error);
+    console.error('Error saving review:', error);
+    res.status(500).send({
+      success: false,
+      message: 'An error occurred while saving the review.',
+      error: error.message,
+    });
   }
 };
+
 export const deleteReview = async (req, res) => {
   try {
     const { product_id, comment_id } = req.body;

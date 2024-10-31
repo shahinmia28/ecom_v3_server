@@ -20,7 +20,7 @@ const orderSchema = new Schema(
     status: {
       type: String,
       default: 'Not Process',
-      enum: ['Not Process', 'Processing', 'Shipped', 'delivered', 'cancel'],
+      enum: ['Not Process', 'Processing', 'Shipped', 'Delivered', 'Cancel'],
     },
   },
   { timestamps: true }
@@ -29,7 +29,3 @@ const orderSchema = new Schema(
 const Order = model('Order', orderSchema);
 
 export default Order;
-// {
-//   type: mongoose.ObjectId,
-//   ref: 'Products',
-// },
