@@ -1,15 +1,10 @@
 import express from 'express';
 import {
-  CancelOrderByUser,
-  OrderCheckout,
   createProduct,
   deleteProduct,
   deleteReview,
   getProducts,
   getSingleProduct,
-  orderCheckoutWithoutPayment,
-  paymentFail,
-  paymentSuccess,
   productCategoryController,
   pushReview,
   relatedProductController,
@@ -55,21 +50,5 @@ productRouter.get('/related-product/:pid/:cid', relatedProductController);
 
 //category wise product
 productRouter.get('/product-category/:slug', productCategoryController);
-
-// order cancel by user
-productRouter.delete('/cancel-order/:_id', CancelOrderByUser);
-
-// //payments routes
-productRouter.post('/order-checkout', requiredSignIn, OrderCheckout);
-
-// Check out without payment || cash on delivery
-productRouter.post(
-  '/order-checkout-without-payment',
-  requiredSignIn,
-  orderCheckoutWithoutPayment
-);
-
-productRouter.post('/payment/success/:trx_id', paymentSuccess);
-productRouter.post('/payment/fail/:trx_id', paymentFail);
 
 export default productRouter;
